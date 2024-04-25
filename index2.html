@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Making System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        #bill {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <form id="billForm">
+        <label for="customerName">Customer Name:</label>
+        <input type="text" id="customerName" name="customerName" required>
+
+        <label for="roseWeight">Weight of Roses (kg):</label>
+        <input type="text" id="roseWeight" name="roseWeight" required>
+
+        <label for="roseRate">Rate per kg (Rs):</label>
+        <input type="text" id="roseRate" name="roseRate" required>
+
+        <label for="pouchQuantity">Number of Pouches:</label>
+        <input type="text" id="pouchQuantity" name="pouchQuantity" required>
+
+        <label for="pouchRate">Rate per Pouch (Rs):</label>
+        <input type="text" id="pouchRate" name="pouchRate" required>
+
+        <label for="totalPouches">Total Number of Pouches:</label>
+        <input type="text" id="totalPouches" name="totalPouches" required>
+
+        <button type="submit">Create Bill</button>
+    </form>
+
+    <div id="bill"></div>
+
+    <script>
+        document.getElementById('billForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+        
+            // Get input values
+            const customerName = document.getElementById('customerName').value;
+            const roseWeight = parseFloat(document.getElementById('roseWeight').value);
+            const roseRate = parseFloat(document.getElementById('roseRate').value);
+            const pouchQuantity = parseInt(document.getElementById('pouchQuantity').value);
+            const pouchRate = parseFloat(document.getElementById('pouchRate').value);
+            const totalPouches = parseInt(document.getElementById('totalPouches').value);
+        
+            // Custom commission calculation function
+            function calculateCommission(amount) {
+                const baseAmount = Math.floor(amount / 100) * 100;
+                return 0.1 * baseAmount;
+            }
+        
+            // Calculate bill details
+            const roseTotal = roseWeight * roseRate;
+            const pouchTotal = pouchQuantity * pouchRate;
+            // const totalWeight = roseWeight * totalPouches;
+            const totalAmount = roseTotal + pouchTotal;
+            const hammaliRate = totalPouches * 5;
+            const commission = calculateCommission(totalAmount); // Custom commission calculation
+            const kirayaRate = 5 * roseWeight + 40 * pouchQuantity;
+            const finalResult = totalAmount - hammaliRate - commission - kirayaRate;
+        
+            // Generate the bill dynamically
+            const billHTML = `
+                <h2>Kushwah Florist</h2>
+                <p><strong>Customer Name:</strong> ${customerName}</p>
+                <p>Roses: ${roseWeight} kg * ${roseRate} Rs/kg = ${roseTotal} Rs</p>
+                <p>Pouches: ${pouchQuantity} pouches * ${pouchRate} Rs/pouch = ${pouchTotal} Rs</p>
+                <p>Total Weight: ${roseWeight} kg + ${pouchQuantity} pouches</p>
+                <p>Total Amount: ${totalAmount} Rs</p>
+                <p>Hammali: ${hammaliRate} Rs</p>
+                <p>Commission (10%): ${commission} Rs</p>
+                <p>Kiraya: ${kirayaRate} Rs</p>
+                <p><strong>Final Result:</strong> ${finalResult} Rs</p>
+                <button id="sendBill">Send Bill via WhatsApp</button>
+            `;
+        
+            // Display the generated bill
+            document.getElementById('bill').innerHTML = billHTML;
+        
+            // Add event listener for sending bill via WhatsApp
+            document.getElementById('sendBill').addEventListener('click', function() {
+                // Add code to send bill via WhatsApp here
+                alert('Bill sent via WhatsApp to ' + customerName);
+            });
+        });
+        </script>
+        
+</body>
+</html>
